@@ -16,7 +16,7 @@ If unit testing/development is required to be done, run the following command ``
 Once the environment is setup the following operations can be done
 
 ### Startup
-The application can be run with the following ```npm run test```
+The application can be run with the following ```npm run start```
 
 By default the web address is used ```localhost:3000```
 
