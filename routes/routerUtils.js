@@ -7,7 +7,7 @@ var RouterUtils = function() {};
 
 RouterUtils.getErrorMsg = function(_msg) {
   return this.getHead()+'<body><div>'+_msg+'</div></body>'
-}
+};
 
 RouterUtils.getHead = function() {
   let headOutput = '<!DOCTYPE html>\n' +
@@ -18,6 +18,7 @@ RouterUtils.getHead = function() {
     '</head>\n';
   return headOutput
 };
+
 RouterUtils.showAll = function(_flagpoles) {
   let resultStart = this.getHead()+'<body>\n    <ol>',
     resultBody = '',
