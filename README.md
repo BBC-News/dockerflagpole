@@ -4,7 +4,7 @@ A containerised application to manage flagpoles
 ## Environment
 The system requires that the following versions of applications to be installed:
 
-node v12.11.1 (npm v6.11.3)
+node v10.16.0 (npm v6.9.0)
 
 ### Installation
 To install the system clone the repository ```git@github.com:bbc/bbc-gn-dockerflagpole.git``` and
@@ -45,8 +45,14 @@ N.B. The system must be running prior to running the tests which assume the foll
 ## Configuration
 The system can be configured to operated in the following environments 
 
-NOT YET DEVELOPED
-
 ### Development
+The system is run with npm on ```localhost:3000```
+
 ### Test
+The flagpole system is run inside inside a docker container where it can be comminocated with by the local  
+web address ```localhost:3000```
+
+--  This needs much more work to plug it into the general test environment. --
+
 ### Production
+No decision has yet been made on this configuration
