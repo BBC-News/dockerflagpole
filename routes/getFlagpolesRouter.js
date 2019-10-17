@@ -1,3 +1,6 @@
+/*
+Simply return a list of flagpoles
+ */
 const express = require('express');
 const router = express.Router();
 

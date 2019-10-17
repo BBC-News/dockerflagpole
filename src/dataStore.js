@@ -1,5 +1,5 @@
 /**
- Object to store a repocitory of Gousto flagpoles
+ Object to store a repository of flagpoles
  */
 "use strict";
 var Flagpole = require('../src/flagpole');
