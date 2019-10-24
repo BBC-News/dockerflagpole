@@ -15,6 +15,7 @@ RouterUtils.getHead = function() {
     '<head>\n' +
     '    <meta charset="UTF-8">\n' +
     '    <title>Title</title>\n' +
+    '    <script src="https://unpkg.com/vue"></script>' +
     '</head>\n';
   return headOutput
 };

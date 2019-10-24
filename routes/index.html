@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Docker Flagpoles</title>
+    <script src="/static/vue.js"></script>
+    <script src="/src/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/css/flagpoles.css">
+</head>
+<body>
+<div id="app">
+    <button v-on:click="loadFlagpoles">Load Flagpoles</button>
+    <flagpole-component v-for="flagpole in flagpoles" :flagpole="flagpole" v-bind:key="flagpole.index"/>
+</body>
+</html>

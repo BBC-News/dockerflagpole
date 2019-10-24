@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();clearImmediate();
 
-router.get('/update',  function(request, response) {
+router.put('/update',  function(request, response) {
   var flagpoleStore = require('../src/dataStore'),
     routerUtils = require('../routes/routerUtils');
-  let hasName = !!request.query.name,
-    hasValue = !!request.query.value,
-    flagpoleName = hasName ? request.query.name : null,
-    flagpoleExists = hasName ? flagpoleStore.flagpoleExists(flagpoleName) : false,
+  let flagpoleName = request.body.name,
+    newValue = request.body.value,
+    hasName = flagpoleName !== undefined,
+    hasValue = newValue !== undefined,
+    flagpoleExists = flagpoleStore.flagpoleExists(flagpoleName) === true,
     requestStatus = flagpoleExists ? hasValue ? 200 : 403 : (hasName && hasValue) ? 404 : 403,
-    newValue = request.query.value,
     output = '';
 
   if (flagpoleExists) {

@@ -1,15 +1,11 @@
 /*
-This will create the initial page
+Simply return a list of flagpoles
  */
 const express = require('express');
-const baseRouter = express.baseRouter();
+const baseRouter = express.Router();
 
 baseRouter.get('/',  function(request, response) {
-  var flagpoleStore = require('../src/dataStore'),
-    baseRouterUtils = require('../routes/routerUtils');
-
-  var output = baseRouterUtils.showAll(flagpoleStore.getAll());
-  response.send(output);
+  response.sendFile(__dirname + '/index.html');
 });
 
 module.exports = baseRouter;
