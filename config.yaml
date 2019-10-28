@@ -1,22 +1,16 @@
-common:
-  api:
-    url: https://cachestack-{platform}-pubstack.bbcverticals.com/api
-live:
-  domain: www.bbc.com
-  clientApiUrl: /data
-  staticBucket:
-    url: 'https://cdn-static.bbcverticals.com'
-  api:
-    url: https://{habitatDomain}/api
-    version: v1
-    clientUrl: /data
-    requestKey: JnesnhUFYZLTTgffWS8efzkSLKorzJZN
-stage:
-  _extends: live
+live :
+  domain : www.bbc.com/flagpoles
+  port : 80
+  source : S3
+staging :
+  domain : www.bbc.com/flagpoles
+  port : 80
+  source : S3
 test:
-  domain: www.test.bbc.com
-  api:
-    url: https://cachestack-{platform}-pubstack.bbcverticals.com/api
+  domain : www.test.bbc.com/flagpoles
+  port : 80
+  source : S3
 dev:
-  port: 3000
-  domain: localhost:3000
+  domain : localhost:3000
+  port : 3000
+  source : test_flagpoles_file.json

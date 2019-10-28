@@ -15,11 +15,16 @@ router.put('/update',  function(request, response) {
   if (flagpoleExists) {
     flagpoleStore.setFlagpole(flagpoleName, newValue);
     output = routerUtils.showAll(flagpoleStore.getAll());
+
+    if (!flagpoleStore.writeFlagpoles()){
+      requestStatus = 500;
+      output = "Error writing out flagpole data"
+    }
   } else {
     if (hasName && hasValue) {
-      output = routerUtils.getErrorMsg('Requested flagpole "' + flagpoleName + '" does not exist');
+      output = 'Requested flagpole "' + flagpoleName + '" does not exist'
     } else {
-      output = routerUtils.getErrorMsg('Badly formed update expression');
+      output = 'Badly formed update expression';
     }
   }
   response.status(requestStatus).send(output);

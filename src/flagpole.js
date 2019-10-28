@@ -7,6 +7,7 @@ var Flagpole = function(_name, _value, _index) {
   this.name = _name||'NONAME';
   this.setValue(_value);
   this.index = _index||0;
+  this.value = false
 };
 
 Flagpole.prototype.setFlagpole = function(_value) {
