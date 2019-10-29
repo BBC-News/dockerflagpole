@@ -8,7 +8,7 @@
 </head>
 <body>
 <div id="app">
-    <button v-on:click="loadFlagpoles">Load Flagpoles</button>
+    <button v-on:click="loadFlagpoles" id="loadFlagpolesBtn">Load Flagpoles</button>
     <flagpole-component v-for="flagpole in flagpoles" :flagpole="flagpole" v-bind:key="flagpole.index"/>
 </body>
 </html>
