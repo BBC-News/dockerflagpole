@@ -1,4 +1,4 @@
-var request = require('request');
+const request = require('request');
 
 describe('Get flagpole data ....', function () {
   let endpoint = 'http://localhost:3000/get';
@@ -12,7 +12,7 @@ describe('Get flagpole data ....', function () {
 
   it("GET ('/get') returns flagpole object data", function (done) {
     request.get(endpoint, function (error, response) {
-      var data = response.json();
+      let data = response.json();
       expect(typeof data).toEqual('object');
       expect(data['ads']).toEqual(true);
       done();

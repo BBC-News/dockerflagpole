@@ -5,7 +5,7 @@ const express = require('express');
 const saveRouter = express.Router();
 
 saveRouter.post('/save',  function(request, response) {
-  var flagpoleStore = require('../src/dataStore');
+  const flagpoleStore = require('../src/dataStore');
 
   flagpoleStore.saveData()
 });

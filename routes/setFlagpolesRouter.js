@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();clearImmediate();
 
 router.put('/update',  function(request, response) {
-  var flagpoleStore = require('../src/dataStore'),
+  let flagpoleStore = require('../src/dataStore'),
     routerUtils = require('../routes/routerUtils');
   let flagpoleName = request.body.name,
     newValue = request.body.value,

@@ -5,7 +5,7 @@ const express = require('express');
 const baseRouter = express.Router();
 
 baseRouter.get('/get',  function(request, response) {
-  var flagpoleStore = require('../src/dataStore');
+  let flagpoleStore = require('../src/dataStore');
   response.send(JSON.stringify(flagpoleStore.getAll()));
 });
 
