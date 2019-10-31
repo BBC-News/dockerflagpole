@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var RouterUtils = function() {};
+let RouterUtils = function() {};
 
 RouterUtils.getErrorMsg = function(_msg) {
   return this.getHead()+'<body><div>'+_msg+'</div></body>'
@@ -15,6 +15,7 @@ RouterUtils.getHead = function() {
     '<head>\n' +
     '    <meta charset="UTF-8">\n' +
     '    <title>Title</title>\n' +
+    '    <script src="https://unpkg.com/vue"></script>' +
     '</head>\n';
   return headOutput
 };
@@ -25,7 +26,7 @@ RouterUtils.showAll = function(_flagpoles) {
     resultEnd = '   </ol>\n</body>\n</html>';
 
   if (Array.isArray(_flagpoles)) {
-    for (var i = 0; i < _flagpoles.length; i++) {
+    for (let i = 0; i < _flagpoles.length; i++) {
       resultBody += '<li>' + _flagpoles[i].name + ' : ' + _flagpoles[i].textValue() + '</li>';
     }
   }

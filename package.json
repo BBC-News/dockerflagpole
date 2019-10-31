@@ -4,21 +4,32 @@
   "description": "A containerized application to manage flagpoles",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/index.js",
+    "start-dev": "node ./src/index.js dev",
+    "start-test": "node ./src/index.js test",
+    "start-prod": "node ./src/index.js",
+    "docker-build-test": "./build.sh build",
+    "docker-launch-test": "./build.sh launch",
     "test-init": "node ./node_modules/jasmine/bin/jasmine.js init",
     "test": "node ./node_modules/jasmine-node/bin/jasmine-node --color --verbose spec/",
     "auto-test": "node ./node_modules/jasmine-node/bin/jasmine-node --color --verbose spec/  --autotest --watch routes/ src/",
-    "test-raw": "node ./node_modules/jasmine/bin/jasmine.js"
+    "cypress-open": "./node_modules/.bin/cypress open",
+    "cypress-test": "CYPRESS_env=test CYPRESS_baseUrl=http://localhost:3000 npm run cypress-open",
+    "cypress-live-test": "CYPRESS_env=live CYPRESS_baseUrl=http://www.bbc.com npm run cypress-open"
   },
   "author": "Ben Davies",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "js-yaml": "^3.13.1"
   },
   "devDependencies": {
+    "cypress": "^3.5.0",
     "jasmine": "^3.5.0",
     "jasmine-core": "^3.5.0",
     "jasmine-node": "^3.0.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "request-debug": "^0.2.0"
   }
 }
