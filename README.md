@@ -10,49 +10,54 @@ node v10.16.0 (npm v6.9.0)
 To install the system clone the repository ```git@github.com:bbc/bbc-gn-dockerflagpole.git``` and
 then in the directory the repo was cloned to run ```npm install```
 
-If unit testing/development is required to be done, run the following command ```npm install --dev```
+If testing/development is required to be done, run the following command ```npm install --dev```
 
+### Building
+In development, there is no building required. When the application is used in test or production, 
+a docker image will have to be built.
+
+#### Test docker build
+In order to run the application as a stand-alone docker image running oin the tester's laptop, the tester
+needs to start docker on thir laptop. Once docker is running run the
+following command once installation is complete ```npm run docker-build-test```
+
+#### Production docker build
+In this situation the docker image needs to be built and sighed with appropriate keys so that the docker
+ image can be managed with all the other docker images in Global News' ECS system.
+
+Scripts for this have not yet been finalised but there are established mechasnisms for achieving this.
+
+## Configuration
+The app can be configured to be run in a number of different environments.
+
+The app is configured with a YAML file that allows a very straight forward mechanism for setting out the 
+different properties. Each target environment can have their own distinct set of properties.
+
+PLease refer to the operation section for more information on how 
 ## Operation
 Once the environment is setup the following operations can be done
 
 ### Startup
-The application can be run with the following ```npm run start```
+The application can be started up in several environmental states
+
+#### Development
+The application can be run with the following ```npm run start-dev```
 
 By default the web address is used ```localhost:3000```
 
-#### Endpoints
-Flagpoles can be manipul;ated in the following ways
+#### Test
+In order to run the application as a stand-alone docker image running on the tester's laptop, the 
+tester mus launch run the
+following command once installation is complete ```npm run docker-launch-test```
 
-##### List
-The default operation of the system is to list flagpoles and their values as an ordered list in a browser at ```/```
+The above command will launch
 
-##### Update
-If a flagpole value is required to be updated the use the following endpoint and arguments
-```/update?name=<name of flagpole>&value=<new flagpole value>```
+#### Production
 
-The named flagpole will be set according to the provided value where true,Y,y,1 are all considered true.
-Once the flagpole is updated successfully, all flagpoles are displayed with their values.
+### Functionality
 
-If the flagpole name is not known, a 404 return status will result and an error message will be displayed
+### Testing
 
-If the flagpole name or value is not provided a 403 return status will result and an error message will be displayed
+#### Jasmine
 
-### Unit testing
-The unit tests can be run with the following command ```npm run test```
-
-N.B. The system must be running prior to running the tests which assume the following web address ```localhost:3000```
-
-## Configuration
-The system can be configured to operated in the following environments 
-
-### Development
-The system is run with npm on ```localhost:3000```
-
-### Test
-The flagpole system is run inside inside a docker container where it can be comminocated with by the local  
-web address ```localhost:3000```
-
---  This needs much more work to plug it into the general test environment. --
-
-### Production
-No decision has yet been made on this configuration
+#### Cypress
