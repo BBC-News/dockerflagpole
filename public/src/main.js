@@ -1,14 +1,34 @@
 window.addEventListener("DOMContentLoaded", function(event) {
+  Vue.component('flagpole-control-edit', {
+    model: {
+      prop: 'checked',
+      event: 'change'
+    },
+    props: {
+      checked: Boolean
+    },
+    template: `
+    <input type="radio" v-bind:checked="checked"
+      v-on:change="$emit('change', $event.target.checked)">
+  `
+  })
+
   Vue.component('flagpole-component', {
     template: `
     <div class="flagpole-container">
       <div class="flagpole-name">{{flagpole.name.toUpperCase()}}</div>
       <div class="flagpole-value">{{flagpole.value?'TRUE':'FALSE'}}</div>
-      <button v-on:click="flagpoleToggle">Toggle</button>
-    </div> 
-  `,
+      <div class="flagpole-control-edit-container">
+        <flagpole-control-edit v-model:"flagpole.edit_value"></flagpole-control-edit>
+      </div>
+    </div>
+    `,
     props: {
       flagpole: Object
+    },
+    mounted : function(){
+      flagpole.edit_value = flagpole.value;
+      console.log("Mounted")
     },
     methods:{
       flagpoleToggle: function(){
@@ -27,7 +47,9 @@ window.addEventListener("DOMContentLoaded", function(event) {
         }.bind(this));
       }
     }
-  });
+  })
+
+
   new Vue({
     el: '#app',
     data: {
