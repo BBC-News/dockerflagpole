@@ -8,43 +8,57 @@ window.addEventListener("DOMContentLoaded", function(event) {
       checked: Boolean
     },
     template: `
-    <input type="radio" v-bind:checked="checked"
-      v-on:change="$emit('change', $event.target.checked)">
-  `
+        <input type="checkbox" v-bind:checked="checked" 
+        v-on:change="$emit('change', $event.target.checked)">
+  `,
+    mounted : function(){
+      console.log("Mounted")
+    }
   })
 
   Vue.component('flagpole-component', {
     template: `
-    <div class="flagpole-container">
+    <div class="flagpole-container" v-on:change="onFlagpoleEdit" v-on:update="flagpoleUpdate">
       <div class="flagpole-name">{{flagpole.name.toUpperCase()}}</div>
       <div class="flagpole-value">{{flagpole.value?'TRUE':'FALSE'}}</div>
       <div class="flagpole-control-edit-container">
-        <flagpole-control-edit v-model:"flagpole.edit_value"></flagpole-control-edit>
+        <flagpole-control-edit :checked="flagpole.value"></flagpole-control-edit>
       </div>
+      <button v-if="flagpole.valueUpdated" v-on:click="flagpoleUpdate">Update Flagpoles</button>
     </div>
     `,
     props: {
       flagpole: Object
     },
-    mounted : function(){
-      flagpole.edit_value = flagpole.value;
-      console.log("Mounted")
+    mounted : function() {
+      console.log("Mounted Flagpole :"+this.flagpole.name.toUpperCase()+
+        " -- "+(this.flagpole.value?'TRUE':'FALSE'))
     },
     methods:{
-      flagpoleToggle: function(){
-        let params = {
-          method: 'put',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({name:this.flagpole.name,value:this.flagpole.value?0:1})
+      onFlagpoleEdit: function($event){
+        if (this.flagpole.originalValue === undefined){
+          this.flagpole.originalValue = this.flagpole.value
         }
-        fetch('http://localhost:3000/update', params).then(function(response){
-          if(response.ok) {
-            this.flagpole.value = !this.flagpole.value;
-            console.log("Flagpole '"+this.flagpole.name+"' toggle");
-          } else {
-            console.log("Toggle of flagpole '"+this.flagpole.name+"' FAILED ("+response.status+")");
-          }
-        }.bind(this));
+        this.flagpole.valueUpdated = this.flagpole.originalValue !== $event.target.checked;
+        this.flagpole.value = $event.target.checked;
+        console.log("Flagpole Edited:"+this.flagpole.name.toUpperCase()+
+          " now "+(this.flagpole.value?'TRUE':'FALSE'))
+      },
+      flagpoleUpdate: function(){
+        if (this.flagpole.valueUpdated) {
+          let params = {
+            method: 'put',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({name: this.flagpole.name, value: this.flagpole.value ? 1 : 0})
+          }, baseURL = this.$parent.baseURL
+          fetch(baseURL+'update', params).then(function (response) {
+            if (response.ok) {
+              this.$parent.loadFlagpoles()
+            } else {
+              console.log("Update of flagpoles FAILED (" + response.status + ")");
+            }
+          }.bind(this));
+        }
       }
     }
   })
@@ -55,13 +69,15 @@ window.addEventListener("DOMContentLoaded", function(event) {
     data: {
       flagpoles:[]
     },
+    mounted: function(){
+      this.baseURL = window.document.URL;
+      this.loadFlagpoles()
+    },
     methods: {
-      flagpoleToggle : function() {
-        console.log("Parent Flagpole TOGGLED");
-      },
       loadFlagpoles: function() {
-        fetch('http://localhost:3000/get').then(function(response){
+        fetch(this.baseURL+'get').then(function(response){
           if(response.ok) {
+            this.flagpoles = [];
             response.json().then(function(_data){
               this.flagpoles = _data
             }.bind(this));
