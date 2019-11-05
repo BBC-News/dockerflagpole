@@ -1,12 +1,39 @@
 .flagpole-container {
     display:flex;
-    width: 400px;
+    flex-direction: column;
+    width: 600px;
     margin: 0 auto;
-    justify-content: space-between;
+    justify-content: start;
+    border-bottom: #c6c6c6 thin solid;
+    margin-top:5px;
 }
+
+.flagpole-info {
+    display:flex;
+    justify-content: start;
+    margin-bottom: 10px;
+}
+
+.flagpole-control-edit-container {
+    display:flex;
+    justify-content: start;
+    margin-bottom: 16px;
+}
+
 .flagpole-name {
-    flex: 2 1 200px;
-}
-.flagpole-value {
     flex: 1 1 auto;
+    margin-right: 10px;
+}
+
+.flagpole-value {
+   flex: 1 1 auto;
+}
+
+.flagpole-edit {
+    margin-right: 10px;
+}
+
+.update-button {
+    width :100px;
+    margin-bottom: 5px;
 }

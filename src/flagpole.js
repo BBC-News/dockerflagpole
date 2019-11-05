@@ -8,6 +8,8 @@ let Flagpole = function(_name, _value, _index) {
   this.setValue(_value);
   this.index = _index||0;
   this.value = false;
+  this.truelabel="ON";
+  this.falselabel="OFF";
 };
 
 Flagpole.prototype.setFlagpole = function(_value) {

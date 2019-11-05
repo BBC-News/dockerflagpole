@@ -5,51 +5,71 @@ window.addEventListener("DOMContentLoaded", function(event) {
       event: 'change'
     },
     props: {
+      label: String,
+      name: String,
       checked: Boolean
     },
     template: `
-        <input type="checkbox" v-bind:checked="checked" 
-        v-on:change="$emit('change', $event.target.checked)">
+        <div class="flagpole-edit">
+          <input type="radio" v-bind:checked="checked" 
+          v-on:change="$emit('change', $event.target.checked)">
+          <span>Turn {{name}} "{{label}}"</span>
+        </div>
   `,
     mounted : function(){
       console.log("Mounted")
+    },
+    onUpdate: function(){
+
     }
   })
 
   Vue.component('flagpole-component', {
     template: `
-    <div class="flagpole-container" v-on:change="onFlagpoleEdit" v-on:update="flagpoleUpdate">
-      <div class="flagpole-name">{{flagpole.name.toUpperCase()}}</div>
-      <div class="flagpole-value">{{flagpole.value?'TRUE':'FALSE'}}</div>
-      <div class="flagpole-control-edit-container">
-        <flagpole-control-edit :checked="flagpole.value"></flagpole-control-edit>
+    <div class="flagpole-container" v-on:update="flagpoleUpdate">
+      <div class="flagpole-info">
+        <div class="flagpole-name">Flagpole name : {{flagpole.name.toUpperCase()}}</div>
+        <div class="flagpole-value">Current value : {{flagpole.originalValue?'TRUE':'FALSE'}}</div>
       </div>
-      <button v-if="flagpole.valueUpdated" v-on:click="flagpoleUpdate">Update Flagpoles</button>
+      <div class="flagpole-control-edit-container">
+        <div v-on:change="onFlagpoleEditTrue">
+            <flagpole-control-edit label="ON" :name="flagpole.name.toUpperCase()" v-bind:checked="flagpole.truevalue"></flagpole-control-edit>
+        </div>
+        <div v-on:change="onFlagpoleEditFalse">
+            <flagpole-control-edit label="OFF" :name="flagpole.name.toUpperCase()" v-bind:checked="flagpole.falsevalue"></flagpole-control-edit>
+        </div>
+      </div>
+      <button class="update-button" v-on:click="flagpoleUpdate">Update</button>
     </div>
     `,
     props: {
       flagpole: Object
     },
-    mounted : function() {
+    beforeMount : function() {
+      this.flagpole.originalValue = this.flagpole.value;
+      this.flagpole.truevalue = this.flagpole.value === true;
+      this.flagpole.falsevalue = this.flagpole.value === false;
       console.log("Mounted Flagpole :"+this.flagpole.name.toUpperCase()+
         " -- "+(this.flagpole.value?'TRUE':'FALSE'))
     },
     methods:{
-      onFlagpoleEdit: function($event){
-        if (this.flagpole.originalValue === undefined){
-          this.flagpole.originalValue = this.flagpole.value
-        }
-        this.flagpole.valueUpdated = this.flagpole.originalValue !== $event.target.checked;
-        this.flagpole.value = $event.target.checked;
-        console.log("Flagpole Edited:"+this.flagpole.name.toUpperCase()+
-          " now "+(this.flagpole.value?'TRUE':'FALSE'))
+      onFlagpoleEditTrue: function($event){
+        this.flagpole.valueUpdated = this.flagpole.originalValue !== true;
+        this.flagpole.truevalue = $event.target.checked;
+        this.flagpole.falsevalue = !this.flagpole.truevalue;
+      },
+      onFlagpoleEditFalse: function($event){
+        this.flagpole.valueUpdated = this.flagpole.originalValue !== false;
+        this.flagpole.falsevalue = $event.target.checked;
+        this.flagpole.truevalue = !this.flagpole.falsevalue;
       },
       flagpoleUpdate: function(){
         if (this.flagpole.valueUpdated) {
-          let params = {
+          let newValue = this.flagpole.truevalue===true,
+            params = {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({name: this.flagpole.name, value: this.flagpole.value ? 1 : 0})
+            body: JSON.stringify({name: this.flagpole.name, value: newValue ? 1 : 0})
           }, baseURL = this.$parent.baseURL
           fetch(baseURL+'update', params).then(function (response) {
             if (response.ok) {
