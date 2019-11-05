@@ -11,7 +11,7 @@ window.addEventListener("DOMContentLoaded", function(event) {
     },
     template: `
         <div class="flagpole-edit">
-          <input type="radio" v-bind:checked="checked" 
+          <input type="radio" v-bind:checked="checkedvalue" :name="name"
           v-on:change="$emit('change', $event.target.checked)">
           <span>Turn {{name}} "{{label}}"</span>
         </div>
