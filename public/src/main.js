@@ -15,18 +15,12 @@ window.addEventListener("DOMContentLoaded", function(event) {
           v-on:change="$emit('change', $event.target.checked)">
           <span>Turn {{name}} "{{label}}"</span>
         </div>
-  `,
-    mounted : function(){
-      console.log("Mounted")
-    },
-    onUpdate: function(){
-
-    }
+  `
   })
 
   Vue.component('flagpole-component', {
     template: `
-    <div class="flagpole-container" v-on:update="flagpoleUpdate">
+    <div class="flagpole-container" v-on:update="flagpoleUpdate" :data-flagpole="flagpole.name.toUpperCase()">
       <div class="flagpole-info">
         <div class="flagpole-name">Flagpole name : {{flagpole.name.toUpperCase()}}</div>
         <div class="flagpole-value">Current value : {{flagpole.originalValue?'TRUE':'FALSE'}}</div>
