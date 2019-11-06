@@ -9,9 +9,6 @@
     "start-prod": "node ./src/index.js",
     "docker-build-test": "./build.sh build",
     "docker-launch-test": "./build.sh launch",
-    "test-init": "node ./node_modules/jasmine/bin/jasmine.js init",
-    "test": "node ./node_modules/jasmine-node/bin/jasmine-node --color --verbose spec/",
-    "auto-test": "node ./node_modules/jasmine-node/bin/jasmine-node --color --verbose spec/  --autotest --watch routes/ src/",
     "cypress-open": "./node_modules/.bin/cypress open",
     "cypress-dev": "CYPRESS_ENVIRONMENT=dev npm run cypress-open",
     "cypress-test": "CYPRESS_ENVIRONMENT=test npm run cypress-open",
@@ -27,9 +24,6 @@
   },
   "devDependencies": {
     "cypress": "^3.5.0",
-    "jasmine": "^3.5.0",
-    "jasmine-core": "^3.5.0",
-    "jasmine-node": "^3.0.0",
     "request": "^2.88.0",
     "request-debug": "^0.2.0",
     "yamljs": "^0.3.0"

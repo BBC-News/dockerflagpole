@@ -9,7 +9,7 @@ describe('Basic flagpole tests using config.yaml....', function () {
       baseURL = config[env].domain;
       cy.readFile(config[env]['source']).then(function (data) {
         flagpoleData = data;
-        flagpoleKeys = Object.keys(flagpoleData)
+        flagpoleKeys = Object.keys(flagpoleData);
         cy.visit(baseURL).then(function () {
           cy.get('.flagpole-container').should('have.length', flagpoleKeys.length)
         })
@@ -38,7 +38,7 @@ describe('Basic flagpole tests using config.yaml....', function () {
           let flagpoleNameText = flagpoleKeys[i].toUpperCase(),
             flagpoleValueText = flagpoleData[flagpoleKeys[i]]?'TRUE':'FALSE';
           cy.get('[data-flagpole="'+flagpoleNameText+'"]').then(function(flagpoleElem) {
-            expect(flagpoleElem.find('.flagpole-value').text()).to.eq('Current value : '+flagpoleValueText)
+            cy.wrap(flagpoleElem).find('.flagpole-value').contains(flagpoleValueText)
           })
         }
       })
