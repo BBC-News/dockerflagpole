@@ -42,6 +42,17 @@ Here are the configuration values that can be set for each environment:-
 Please refer to the operation section for more information on how each configuration value is used in each 
 different environment.
 
+### Flagpole data
+The flagpole data will be the following JSON structure in all environments but each environment can specify their
+own storage location (see source config above) as required.
+
+```
+{
+    <flagpole name> : <flagpole data (boolean)>,
+    .....
+}
+```
+
 ## Operation
 Once the environment is installed the following operational capabilities are possible.
 
@@ -83,28 +94,55 @@ to all live applications requiring flagpole data.
  
 ### Functionality
 When opened the app will display a list of flagpoles read from the configured source for that environment.
+All flagpoles found in the source configured for that environment are displayed to the user.
 
+#### Flagpole display
 Each flagpole display will have the following UI details :-
 * Name - The capitalized name of the flagpole.
-* Value - The boolean value of the flagpole will be displayed as text
-* Radio button - A control to allow the state of the flagpole to be changed.
-* Update button - A button that will be displayed when the user has altered the value of the flagpole.
+* Current Value - The boolean value of the flagpole will be displayed as text
 
-Clicking the update button will set the value of the flagpole to the current state of the radio button and cause
+#### Flagpole editing
+Below the flagpole description the following UI controls will be displayed
+* True radio - Initially selected if the flagpole state is true. Can set a flagpole state from false to true.
+* False radio - Initially selected if the flagpole state is false. Can set a flagpole state from true to false.
+* Update button - A button to write the current flagpole state to file if the state of the flagpole has changed.
+
+Clicking the update button will set the value of the flagpole to the current state of the radio buttons and cause
 all flagpoles to be written out to the source file. Once the write has completed successfully, all flagpoles will
 be refreshed on the screen to display the new value.
 
 ### Testing
+Testing is now done using Cypress rather than jasmine as the UI has now been changed and all test that were 
+run in Jasmine are now covered by Cypress.
 
-#### Jasmine
-Jasmine tests are run in the dev environment by the command ```npm run test```.
+The Cypress tests are javascript spec files in the directory ```cypress/integration``` and can be
+chosen to be run by issuing the following commands based on the environment. The tests have been designed to
+read in the configuration for an enviroment and base the tests on that configuration.
+ 
+There are two main tests, active and static tests.
+* Static tests - These tests test that all flagpoles are displayed correctly in the UI.
+* Active tests - These tests operate the editing functionaliy of the UI to check the behaviour.
+  
+#### Development environment testing
+The following command will start up the Cypress environment that will execute the tests in the development
+ environment ```npm run cypress-dev```. Prior to running this command the developer will need to launch the development
+ server.
+ 
+Both sets of tests will use the dev source and check the display in using the localhost port defined in the configuration.
 
-If files are required to be watched and tests run continuously usxe ```npm run auto-test```
-
-All javascript files with ```spec``` in the name in the spec directory are run as tests 
-
-#### Cypress
-Cypress tests are javascript files in the directory ```cypress/integration``` and can be chosen to be run by 
-issueing the command ```npm run cypress-open```.
-
-These tests are still being dev eloped and will eventually be configured for the final functionality of the app.
+#### Test enviroment testing
+The following command will start up the Cypress environment that will execute the tests in the test
+ environment ```npm run cypress-test```. Prior to running the command a tester needs to build and launch the
+ test docker container that will actually operate the tests. 
+ 
+Both sets of tests will use the test flagpoles source and check the display in using the localhost port defined in 
+the configuration. Where this differs from development is that the localhost port will be communicating with
+a docker image running the flagpoles app.
+  
+#### Production environment testing
+The following command will start up the Cypress environment that will execute the tests in the live
+ environment ```npm run cypress-live```.
+ 
+Both sets of tests will use the dev source and check the display in using the live domain defined in the 
+configuration.
+   
