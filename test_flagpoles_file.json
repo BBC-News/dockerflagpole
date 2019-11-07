@@ -1,1 +1,10 @@
-{"ads":true,"analytics":false,"sherlock":true,"newflagpole":true}
+{
+  "ads":{
+    "value":true,
+    "description":"Display or supress adverts",
+    "trueName":"ENABLED",
+    "trueDesc":"Adverts will be displayed",
+    "falseName":"SUPPRESSED",
+    "falseDesc":"Adverts are suppressed"
+  }
+}

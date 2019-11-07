@@ -48,8 +48,28 @@ own storage location (see source config above) as required.
 
 ```
 {
-    <flagpole name> : <flagpole data (boolean)>,
+    <flagpole name> : {
+        "value" : <flagpole valued (boolean)>,
+        "description" : "<flagpole description>,
+        "trueName" : <Text to show when flagpole is true>,
+        "trueDesc" : <description to display when flagpole is true>,
+        "falseName" : <Text to show when flagpole is true>,
+        "falseDesc" : <description to display when flagpole is false>
+    },
     .....
+}
+
+eg.
+
+{
+  "ads":{
+    "value":true,
+    "description":"Display or supress adverts",
+    "trueName":"ENABLED",
+    "trueDesc":"Adverts will be displayed",
+    "falseName":"SUPPRESSED",
+    "falseDesc":"Adverts are suppressed"
+  }
 }
 ```
 
