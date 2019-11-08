@@ -43,32 +43,41 @@ Please refer to the operation section for more information on how each configura
 different environment.
 
 ### Flagpole data
-The flagpole data will be the following JSON structure in all environments but each environment can specify their
-own storage location (see source config above) as required.
+The flagpole data will be the following for each JSON flagpole which will allow each flagpole to be more expresive
+when read in the application.
 
 ```
 {
     <flagpole name> : {
-        "value" : <flagpole valued (boolean)>,
-        "description" : "<flagpole description>,
-        "trueName" : <Text to show when flagpole is true>,
-        "trueDesc" : <description to display when flagpole is true>,
-        "falseName" : <Text to show when flagpole is true>,
-        "falseDesc" : <description to display when flagpole is false>
+        "name" : <The name of the flagpole>,
+        "value" : <flagpole value (boolean)>,
+        "modified" : <Date of last modification (format:"ddd, dd mmm yyyy HH:MM:ss")>
+        "message" : <Message to be displayed against flagpole data>,
+        "trueName" : <Name of the flagpole true state>,
+        "trueDesc" : <Description to display when flagpole is true>,
+        "falseName" : <Name of the flagpole false state>,
+        "falseDesc" : <Description to display when flagpole is false>
     },
     .....
 }
+```
+Below is an example of a poulated flagpole object. Please note the following:-
+* The initial modified date is blank. No user intervention is required as it will be managed by the application.
+* The name value in the flagpole object must exactly match the property name of the flagpole object in the JSON.
+* The true/false names should be the most succinct statement that fits the use case of the flagpole value. 
+* The true/false descriptions can be anything that makes flagpole management easier.
 
-eg.
-
+```
 {
-  "ads":{
-    "value":true,
-    "description":"Display or supress adverts",
-    "trueName":"ENABLED",
-    "trueDesc":"Adverts will be displayed",
-    "falseName":"SUPPRESSED",
-    "falseDesc":"Adverts are suppressed"
+  "adverts":{
+    "name" : 
+    "value" : true,
+    "modified" : "",
+    "message" : "For non-LIVE (INT, TEST, STAGE), do not change this flagpole without speaking to GNL/bbc.com (WWGNDevelopmentTeam@bbc.com) first.",
+    "trueName" : "ON",
+    "trueDesc" : "Adverts are ENABLED",
+    "falseName" : "OFF",
+    "falseDesc" : "Adverts are SUPPRESSED"
   }
 }
 ```
@@ -119,29 +128,32 @@ All flagpoles found in the source configured for that environment are displayed 
 #### Flagpole display
 Each flagpole display will have the following UI details :-
 * Name - The capitalized name of the flagpole.
-* Current Value - The boolean value of the flagpole will be displayed as text
-
+* Current Value - The name of the flagpole's boolean value state will be displayed.
+* Value description - The description of the flagpole's boolean value state will be displayed. 
+* Message - If a message is included in the flagpole object, it will be displayed here.
+ 
 #### Flagpole editing
-Below the flagpole description the following UI controls will be displayed
-* True radio - Initially selected if the flagpole state is true. Can set a flagpole state from false to true.
-* False radio - Initially selected if the flagpole state is false. Can set a flagpole state from true to false.
+Below the flagpole display, the following UI controls will be displayed
+* Modified date - The date and time this flagpole was last changed. This is not user editable.
+* True radio - Initially selected if the flagpole state is true. Can set a flagpole value from false to true.
+* False radio - Initially selected if the flagpole state is false. Can set a flagpole value from true to false.
 * Update button - A button to write the current flagpole state to file if the state of the flagpole has changed.
 
 Clicking the update button will set the value of the flagpole to the current state of the radio buttons and cause
 all flagpoles to be written out to the source file. Once the write has completed successfully, all flagpoles will
-be refreshed on the screen to display the new value.
+be re-displayed on the screen to display the new value.
+
+The modified date of the edited flagpole will be set to the date and time of the moment when the flagpole was
+updated.
 
 ### Testing
-Testing is now done using Cypress rather than jasmine as the UI has now been changed and all test that were 
-run in Jasmine are now covered by Cypress.
-
-The Cypress tests are javascript spec files in the directory ```cypress/integration``` and can be
-chosen to be run by issuing the following commands based on the environment. The tests have been designed to
-read in the configuration for an enviroment and base the tests on that configuration.
+End-to-end testing is now done using Cypress test framework. The Cypress tests are javascript spec files in the
+directory ```cypress/integration``` and read in the configuration of an environment and base the tests on that
+ configuration.
  
 There are two main tests, active and static tests.
-* Static tests - These tests test that all flagpoles are displayed correctly in the UI.
-* Active tests - These tests operate the editing functionaliy of the UI to check the behaviour.
+* Static tests - These tests test that all flagpoles in  the environment are displayed correctly in the UI.
+* Active tests - These tests operate the editing functionality of the UI to check the behaviour.
   
 #### Development environment testing
 The following command will start up the Cypress environment that will execute the tests in the development

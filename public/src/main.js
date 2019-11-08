@@ -23,10 +23,11 @@ window.addEventListener("DOMContentLoaded", function(event) {
     template: `
     <div class="flagpole-container" v-on:update="flagpoleUpdate" :data-flagpole="flagpole.name.toUpperCase()">
       <div class="flagpole-info">
-        <div class="flagpole-name">Flagpole name : {{flagpole.name.toUpperCase()}}</div>
+        <div class="flagpole-name">{{flagpole.name.toUpperCase()}}</div>
         <div class="flagpole-value">{{flagpole.originalValue?flagpole.trueName:flagpole.falseName}}</div>
         <div class="flagpole-value-desc">{{flagpole.originalValue?flagpole.trueDesc:flagpole.falseDesc}}</div>
       </div>
+      <div class="flagpole-message">{{flagpole.message}}</div>
       <div class="flagpole-mod-date">Last modified : {{flagpole.modified}}</div>
       <div class="flagpole-control-edit-container">
         <div v-on:change="onFlagpoleEditTrue">
