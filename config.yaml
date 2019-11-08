@@ -1,11 +1,11 @@
 live :
   domain : www.bbc.com/flagpoles
-  port : 3002
+  port : 3001
   source : <live S3 location>
 test:
-  domain : www.test.bbc.com/flagpoles
+  domain : localhost:3001
   port : 3001
-  source : <test S3 location>
+  source : s3://bbc-gnl-sandpit-dockerflagpole/flagpole_boolean.json
 dev:
   domain : localhost:3000
   port : 3000
