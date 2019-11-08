@@ -7,13 +7,14 @@ window.addEventListener("DOMContentLoaded", function(event) {
     props: {
       label: String,
       name: String,
+      statename: String,
       checked: Boolean
     },
     template: `
         <div class="flagpole-edit">
-          <input type="radio" v-bind:checked="checked" :name="name" :data-check-role="label"
+          <input type="radio" v-bind:checked="checked" :name="name" :data-check-role="statename"
           v-on:change="$emit('change', $event.target.checked)">
-          <span>Turn {{name}} "{{label}}"</span>
+          <span>{{statename}} : {{label}}</span>
         </div>
   `
   })
@@ -23,14 +24,16 @@ window.addEventListener("DOMContentLoaded", function(event) {
     <div class="flagpole-container" v-on:update="flagpoleUpdate" :data-flagpole="flagpole.name.toUpperCase()">
       <div class="flagpole-info">
         <div class="flagpole-name">Flagpole name : {{flagpole.name.toUpperCase()}}</div>
-        <div class="flagpole-value">Current value : {{flagpole.originalValue?'TRUE':'FALSE'}}</div>
+        <div class="flagpole-value">{{flagpole.originalValue?flagpole.trueName:flagpole.falseName}}</div>
+        <div class="flagpole-value-desc">{{flagpole.originalValue?flagpole.trueDesc:flagpole.falseDesc}}</div>
       </div>
+      <div class="flagpole-mod-date">Last modified : {{flagpole.modified}}</div>
       <div class="flagpole-control-edit-container">
         <div v-on:change="onFlagpoleEditTrue">
-            <flagpole-control-edit label="ON" :name="flagpole.name.toUpperCase()" v-bind:checked="flagpole.truevalue"></flagpole-control-edit>
+            <flagpole-control-edit :label="flagpole.trueDesc" :statename="flagpole.trueName" :name="flagpole.name.toUpperCase()" v-bind:checked="flagpole.truevalue"></flagpole-control-edit>
         </div>
         <div v-on:change="onFlagpoleEditFalse">
-            <flagpole-control-edit label="OFF" :name="flagpole.name.toUpperCase()" v-bind:checked="flagpole.falsevalue"></flagpole-control-edit>
+            <flagpole-control-edit :label="flagpole.falseDesc" :statename="flagpole.falseName" :name="flagpole.name.toUpperCase()" v-bind:checked="flagpole.falsevalue"></flagpole-control-edit>
         </div>
       </div>
       <button class="update-button" v-on:click="flagpoleUpdate">Update</button>
@@ -43,8 +46,6 @@ window.addEventListener("DOMContentLoaded", function(event) {
       this.flagpole.originalValue = this.flagpole.value;
       this.flagpole.truevalue = this.flagpole.value === true;
       this.flagpole.falsevalue = this.flagpole.value === false;
-      console.log("Mounted Flagpole :"+this.flagpole.name.toUpperCase()+
-        " -- "+(this.flagpole.value?'TRUE':'FALSE'))
     },
     methods:{
       onFlagpoleEditTrue: function($event){

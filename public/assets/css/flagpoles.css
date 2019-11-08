@@ -29,6 +29,10 @@
    flex: 1 1 auto;
 }
 
+.flagpole-value-desc {
+    flex: 1 1 auto;
+}
+
 .flagpole-edit {
     margin-right: 10px;
 }
@@ -36,4 +40,8 @@
 .update-button {
     width :100px;
     margin-bottom: 5px;
+}
+
+.flagpole-mod-date {
+    margin-bottom:7px;
 }
