@@ -51,6 +51,7 @@ FlagpoleStore.setFlagpole = function(_flagpoleName, _newValue) {
     _newValue==='Y' || _newValue==='y' || _newValue===1 || false,
     flagpole = this.dataStore[_flagpoleName]||null;
   if (flagpole !== null){
+
     flagpole.value = newValue;
     const dateFormat = require('dateformat');
     let now = new Date();
@@ -78,13 +79,27 @@ FlagpoleStore.setupFlagpoles = function(_flagpoleDataURL, _usesS3DataSource, _s3
   }.bind(this))
 };
 
-FlagpoleStore.writeFlagpoles = function(_flagpolesFile) {
-  let res = true, outputStr = '';
-  try {
+
+FlagpoleStore.writeFlagpoles = async function() {
+  let res = true,
     outputStr = JSON.stringify(this.dataStore);
-    fs.writeFileSync(this.dataSourceURL, outputStr, 'utf8')
+  try {
+    if (this.usesS3Data) {
+      let params = {
+        Bucket: this.s3Bucket,
+        Key: this.dataSourceURL,
+        Body: Buffer.from(outputStr, 'utf8')
+      };
+      let writeResponse = await new AWS.S3({apiVersion: '2006-03-01'}).putObject(params
+      ).promise();
+      if (writeResponse.err) {
+        throw new Error(`Error writing to file :${this.dataSourceURL} in S3 bucket : ${this.s3Bucket}`)
+      }
+    } else {
+      fs.writeFileSync(this.dataSourceURL, outputStr, 'utf8')
+    }
   } catch (e) {
-    console.log("Caught Error on write :"+e.message);
+    console.log("Caught Error on write :" + e.message);
     res = false
   }
   return res
