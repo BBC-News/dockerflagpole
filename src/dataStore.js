@@ -47,16 +47,25 @@ FlagpoleStore.readS3Flagpoles = function() {
 }
 
 FlagpoleStore.setFlagpole = function(_flagpoleName, _newValue) {
-  let newValue = _newValue===true || _newValue==='true' || _newValue==='TRUE' ||
-    _newValue==='Y' || _newValue==='y' || _newValue===1 || false,
-    flagpole = this.dataStore[_flagpoleName]||null;
-  if (flagpole !== null){
+  let newValue = _newValue === true || _newValue === 'true' || _newValue === 'TRUE' ||
+    _newValue === 'Y' || _newValue === 'y' || _newValue === 1 || false,
+    res = true;
 
+  return new Promise(function (resolve, reject) {
+    let clonedData = JSON.parse(JSON.stringify(this.dataStore));
+    let flagpole = clonedData[_flagpoleName];
     flagpole.value = newValue;
     const dateFormat = require('dateformat');
     let now = new Date();
     flagpole.modified = dateFormat(now, "ddd, dd mmm yyyy HH:MM:ss");
-  }
+
+    this.writeFlagpoles(JSON.stringify(clonedData)).then(function () {
+      this.dataStore = clonedData;
+      resolve()
+    }.bind(this), function (_err) {
+      reject(_err)
+    })
+  }.bind(this))
 }
 
 FlagpoleStore.setupFlagpoles = function(_flagpoleDataURL, _usesS3DataSource, _s3Bucket) {
@@ -73,36 +82,32 @@ FlagpoleStore.setupFlagpoles = function(_flagpoleDataURL, _usesS3DataSource, _s3
         throw new Error(`Reading from s3 failed (${_err})`)
       }.bind(this))
     } else {
-      this.dataStore = JSON.parse(this.readFlagpoles())
+      this.dataStore = JSON.parse(this.readFlagpoles());
       resolve()
     }
   }.bind(this))
-};
+}
 
 
-FlagpoleStore.writeFlagpoles = async function() {
-  let res = true,
-    outputStr = JSON.stringify(this.dataStore);
-  try {
+FlagpoleStore.writeFlagpoles = function(_outputStr) {
+  return new Promise(function(resolve, reject) {
     if (this.usesS3Data) {
       let params = {
         Bucket: this.s3Bucket,
         Key: this.dataSourceURL,
-        Body: Buffer.from(outputStr, 'utf8')
+        Body: Buffer.from(_outputStr, 'utf8')
       };
-      let writeResponse = await new AWS.S3({apiVersion: '2006-03-01'}).putObject(params
-      ).promise();
-      if (writeResponse.err) {
-        throw new Error(`Error writing to file :${this.dataSourceURL} in S3 bucket : ${this.s3Bucket}`)
-      }
+      let writeResponse = new AWS.S3({apiVersion: '2006-03-01'}).putObject(params, function (_err, _data) {
+        if (_err) {
+          reject(`Error writing to file :${this.dataSourceURL} in S3 bucket : ${this.s3Bucket}`)
+        } else {
+          resolve()
+        }
+      }.bind(this))
     } else {
-      fs.writeFileSync(this.dataSourceURL, outputStr, 'utf8')
+      fs.writeFileSync(this.dataSourceURL, _outputStr, 'utf8')
     }
-  } catch (e) {
-    console.log("Caught Error on write :" + e.message);
-    res = false
-  }
-  return res
+  }.bind(this))
 }
 
 

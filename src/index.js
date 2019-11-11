@@ -23,9 +23,9 @@ try {
   const baseFlagpolesRouter = require('../routes/baseFlagpolesRouter');
   const getFlagpolesRouter = require('../routes/getFlagpolesRouter');
   const setFlagpolesRouter = require('../routes/setFlagpolesRouter');
-  const writeFlagpolesRouter = require('../routes/writeFlagpolesRouter');
   const bodyParser = require("body-parser");
   const app = express();
+
   app.use('/static', express.static('public/static'));
   app.use('/src', express.static('public/src'));
   app.use('/assets', express.static('public/assets'));
@@ -33,7 +33,6 @@ try {
   app.use(baseFlagpolesRouter);
   app.use(getFlagpolesRouter);
   app.use(setFlagpolesRouter);
-  app.use(writeFlagpolesRouter);
 
   const flagpoleStore = require('../src/dataStore');
   flagpoleStore.setupFlagpoles(flagpoleDataURL, usesS3DataSource, s3Bucket).then(function () {
