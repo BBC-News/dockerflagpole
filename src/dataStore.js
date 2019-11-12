@@ -99,13 +99,18 @@ FlagpoleStore.writeFlagpoles = function(_outputStr) {
       };
       let writeResponse = new AWS.S3({apiVersion: '2006-03-01'}).putObject(params, function (_err, _data) {
         if (_err) {
-          reject(`Error writing to file :${this.dataSourceURL} in S3 bucket : ${this.s3Bucket}`)
+          reject(`Error writing flagpoles to file :${this.dataSourceURL} in S3 bucket : ${this.s3Bucket}`)
         } else {
           resolve()
         }
       }.bind(this))
     } else {
-      fs.writeFileSync(this.dataSourceURL, _outputStr, 'utf8')
+      try {
+        fs.writeFileSync(this.dataSourceURL, _outputStr, 'utf8')
+        resolve()
+      } catch (e) {
+        reject(`Error writing flagpoleds to local file :${this.dataSourceURL} : ${e.message}`)
+      }
     }
   }.bind(this))
 }
