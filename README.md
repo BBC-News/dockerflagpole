@@ -20,7 +20,10 @@ In development there is no further building required. When the application is us
 #### Test docker build
 In order to run the application as a stand-alone docker image running on the tester's laptop, the tester
 needs to start docker on their laptop. Once the docker application is running, run the
-following command once to build a testing docker image ```npm run docker-build-test```
+following command once to build a testing docker image ```npm run docker-build-test```.
+
+This npm command ultimately runs the script build.sh with the argument 'build' This creates an image that
+will communicate to localhost:3001 otf thehost machine.
 
 #### Production docker build
 In this situation the docker image needs to be built and signed with appropriate keys so that it can be 
@@ -38,6 +41,8 @@ Here are the configuration values that can be set for each environment:-
 * port - This is the port thaat the application will operate on.
 * source - The is the file that flagpole data will be read from and written to in an environment.
 * domain - This is not actively used at the moment but may prove useful later.
+* uses_s3 - This is a boolean to indicate if the environment will use S3 for its flagpole source.
+* s3_bucket - This is the name of the S3 bucket to use (only required if uses_s3 is true) 
 
 Please refer to the operation section for more information on how each configuration value is used in each 
 different environment.
@@ -97,10 +102,9 @@ standard file that only serves for testing. If the developer wishes to add new o
 Cypress or Jasmine tests should be adjusted to fir the new values.
 
 #### Test startup
-In test the app is run as a stand-alone docker image running on the tester's laptop, the 
+In test, the app is run as a stand-alone docker image running on the tester's laptop, the 
 tester must launch docker image with the following command ```npm run docker-launch-test```.
-
-N.B. The tester must have built the image to run first (see building section)
+**N.B.** The tester must have built the image to run first (see building section)
 
 The above command will launch the docker container which will, by default, connect the app running against
 localhost:3000 on the local docker image to localhost:3000 on the tester's browser. The port that is used and the 
@@ -108,6 +112,9 @@ command to start the app on that port is part of the setup of the docker image.
 
 The app will be configured to read from and write to an agreed S3 bucket hosted file that will be accessible 
 to all test applications requiring flagpole data.
+
+**N.B.** There is a current limitation in that the docker image does not yet have permission to read from
+and write to S3 files.
 
 #### Production startup
 When in production the app will run as its own EC2 container as part of the standard ECS that Global News runs. This
@@ -147,34 +154,47 @@ The modified date of the edited flagpole will be set to the date and time of the
 updated.
 
 ### Testing
-End-to-end testing is now done using Cypress test framework. The Cypress tests are javascript spec files in the
-directory ```cypress/integration``` and read in the configuration of an environment and base the tests on that
- configuration.
- 
-There are two main tests, active and static tests.
-* Static tests - These tests test that all flagpoles in  the environment are displayed correctly in the UI.
-* Active tests - These tests operate the editing functionality of the UI to check the behaviour.
+End-to-end testing is now done using Cypress test framework where the tests read in the configuration of the
+environment they're asked to run under to determine the urls and test   
+
+The Cypress tests are javascript spec files held in the directory ```cypress/integration```  and  have two main
+mechanisms of testing, active and static tests.
+* Static tests - These tests test that all flagpoles in the environment are displayed correctly in the UI.
+* Active tests - These tests operate the editing functionality of the UI to check the behaviour and actually 
+update the flagpoles JSON data file.
   
 #### Development environment testing
-The following command will start up the Cypress environment that will execute the tests in the development
- environment ```npm run cypress-dev```. Prior to running this command the developer will need to launch the development
- server.
- 
-Both sets of tests will use the dev source and check the display in using the localhost port defined in the configuration.
+The following command will start up the development Cypress environment ```npm run cypress-dev```.
+This will allow execution of tests in the development environment using the development configuration parameters
+such as source (flagpoles JSON file) and domain.
+
+ Prior to running this command the developer will need to have launched the development server with the command
+ ```npm run start-dev```.
+
+The following tests can be run in the development environment ```dev_static_tests_spec.js & dev_active_test_spec.js```.
+Each test will read in the contents of the development data source and check that the data in the file is correctly 
+displayed in the app. 
 
 #### Test enviroment testing
-The following command will start up the Cypress environment that will execute the tests in the test
- environment ```npm run cypress-test```. Prior to running the command a tester needs to build and launch the
- test docker container that will actually operate the tests. 
+TThe following command will start up the test Cypress environment ```npm run cypress-test```.
+ This will allow execution of tests in the test environment using the test configuration parameters
+ such as S3 source (flagpoles JSON file), S3 bucket and test domain (localhost connected to a docker image).
  
-Both sets of tests will use the test flagpoles source and check the display in using the localhost port defined in 
-the configuration. Where this differs from development is that the localhost port will be communicating with
-a docker image running the flagpoles app.
-  
+Prior to running this command the tester will need to have built and launched the test docker container 
+(see Test Startup section - Please note the current limitations)
+
+The following test can be run in the test environment ```static_tests_spec.js```.
+As Cypress cannot read the contents of an S3 file, this test extrapolates the contents of the flagpole JSON file
+from the data displayed in the browser. The dynamic tests have not yet been implemented for the test environment
+due to the limitations described in the Test Startup section
+
+Cypress tests can currently be run by initially starting up the app in test mode (```npm run start-test```) and then
+running the standard commands described above. This will be functionally the same as running the tests against
+a docker image.
+   
 #### Production environment testing
 The following command will start up the Cypress environment that will execute the tests in the live
  environment ```npm run cypress-live```.
  
-Both sets of tests will use the dev source and check the display in using the live domain defined in the 
-configuration.
+The tests that can be run in the live environment will be the same as those that can be performed in test.
    

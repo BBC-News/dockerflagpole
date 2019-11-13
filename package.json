@@ -6,7 +6,7 @@
   "scripts": {
     "start-dev": "node ./src/index.js dev",
     "start-test": "node ./src/index.js test",
-    "start-prod": "node ./src/index.js",
+    "start-prod": "node ./src/index.js live",
     "docker-build-test": "./build.sh build",
     "docker-launch-test": "./build.sh launch",
     "cypress-open": "./node_modules/.bin/cypress open",
