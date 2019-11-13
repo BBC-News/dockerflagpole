@@ -56,12 +56,12 @@ FlagpoleStore.setFlagpole = function(_flagpoleName, _newValue) {
     let flagpole = clonedData[_flagpoleName];
     flagpole.value = newValue;
     const dateFormat = require('dateformat');
-    let now = new Date();
-    flagpole.modified = dateFormat(now, "ddd, dd mmm yyyy HH:MM:ss");
+    let modified = dateFormat(new Date(), "ddd, dd mmm yyyy HH:MM:ss");
+    flagpole.modified = modified;
 
     this.writeFlagpoles(JSON.stringify(clonedData)).then(function () {
       this.dataStore = clonedData;
-      resolve()
+      resolve(modified)
     }.bind(this), function (_err) {
       reject(_err)
     })

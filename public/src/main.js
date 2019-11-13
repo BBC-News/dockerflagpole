@@ -24,11 +24,11 @@ window.addEventListener("DOMContentLoaded", function(event) {
     <div class="flagpole-container" v-on:update="flagpoleUpdate" :data-flagpole="flagpole.name.toUpperCase()">
       <div class="flagpole-info">
         <div class="flagpole-name">{{flagpole.name.toUpperCase()}}</div>
-        <div class="flagpole-value">{{flagpole.originalValue?flagpole.trueName:flagpole.falseName}}</div>
-        <div class="flagpole-value-desc">{{flagpole.originalValue?flagpole.trueDesc:flagpole.falseDesc}}</div>
+        <div class="flagpole-value">{{originalValue?flagpole.trueName:flagpole.falseName}}</div>
+        <div class="flagpole-value-desc">{{originalValue?flagpole.trueDesc:flagpole.falseDesc}}</div>
       </div>
       <div class="flagpole-message">{{flagpole.message}}</div>
-      <div class="flagpole-mod-date">Last modified : {{flagpole.modified}}</div>
+      <div class="flagpole-mod-date">Last modified : {{modified}}</div>
       <div class="flagpole-control-edit-container">
         <div v-on:change="onFlagpoleEditTrue">
             <flagpole-control-edit :label="flagpole.trueDesc" :statename="flagpole.trueName" :name="flagpole.name.toUpperCase()" v-bind:checked="flagpole.truevalue"></flagpole-control-edit>
@@ -43,38 +43,45 @@ window.addEventListener("DOMContentLoaded", function(event) {
     props: {
       flagpole: Object
     },
+    computed :{
+      originalValue: function () {
+        return this.flagpole.value
+      },
+      modified : function() {
+        return this.flagpole.modified
+      }
+    },
     beforeMount : function() {
       this.flagpole.originalValue = this.flagpole.value;
       this.flagpole.truevalue = this.flagpole.value === true;
       this.flagpole.falsevalue = this.flagpole.value === false;
     },
-    methods:{
-      onFlagpoleEditTrue: function($event){
-        this.flagpole.valueUpdated = this.flagpole.originalValue !== true;
+    methods: {
+      onFlagpoleEditTrue: function ($event) {
         this.flagpole.truevalue = $event.target.checked;
         this.flagpole.falsevalue = !this.flagpole.truevalue;
       },
-      onFlagpoleEditFalse: function($event){
-        this.flagpole.valueUpdated = this.flagpole.originalValue !== false;
+      onFlagpoleEditFalse: function ($event) {
         this.flagpole.falsevalue = $event.target.checked;
         this.flagpole.truevalue = !this.flagpole.falsevalue;
       },
-      flagpoleUpdate: function(){
-        if (this.flagpole.valueUpdated) {
-          let newValue = this.flagpole.truevalue===true,
-            params = {
+      flagpoleUpdate: function () {
+        let newValue = this.flagpole.truevalue === true,
+          params = {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({name: this.flagpole.name, value: newValue ? 1 : 0})
-          }, baseURL = this.$parent.baseURL
-          fetch(baseURL+'update', params).then(function (response) {
-            if (response.ok) {
-              this.$parent.loadFlagpoles()
-            } else {
-              console.log("Update of flagpoles FAILED (" + response.status + ")");
-            }
-          }.bind(this));
-        }
+          };
+        fetch(this.$parent.baseURL + 'update', params).then(async function (response) {
+          if (response.ok) {
+            this.flagpole.value = !this.flagpole.value;
+            let newModDate = await response.text();
+            this.flagpole.modified = newModDate;
+            this.$forceUpdate()
+          } else {
+            console.log("Update of flagpoles FAILED (" + response.status + ")");
+          }
+        }.bind(this));
       }
     }
   })

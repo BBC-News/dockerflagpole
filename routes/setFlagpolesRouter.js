@@ -13,9 +13,8 @@ router.put('/update', function(request, response) {
     output = '';
 
   if (flagpoleExists) {
-    flagpoleStore.setFlagpole(flagpoleName, newValue).then (function(){
-      output = routerUtils.showAll(flagpoleStore.getAll());
-      response.status(requestStatus).send(output);
+    flagpoleStore.setFlagpole(flagpoleName, newValue).then (function(_modifiedDate){
+      response.send(_modifiedDate)
     }).catch(function(_err) {
       output = output = routerUtils.showAll(flagpoleStore.getAll());
       response.status(500).send(output);

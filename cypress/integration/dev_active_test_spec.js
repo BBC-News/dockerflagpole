@@ -43,6 +43,7 @@ describe('Development active flagpole tests using config.yaml....', function () 
     })
 
     it("Use edit controls and update the value of each flagpole", function () {
+      cy.visit(baseURL)
       for (let i = 0; i < flagpoleKeys.length; i++) {
         let flagpole = flagpoleData[flagpoleKeys[i]],
           flagpoleNameText = flagpoleKeys[i].toUpperCase(),
