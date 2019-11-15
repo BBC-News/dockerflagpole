@@ -5,7 +5,7 @@ A containerised application to manage flagpoles in a JSON file that is accessibl
 ## Environment
 The system requires that the following versions of applications to be installed:
 
-node v10.16.0 (npm v6.9.0)
+node v10.16.x (npm v6.9.0)
 
 ### Installation
 To install the system clone the repository ```git@github.com:bbc/bbc-gn-dockerflagpole.git``` and
