@@ -1,8 +1,6 @@
 .flagpole-container {
     display:flex;
     flex-direction: column;
-    width: 600px;
-    margin: 0 auto;
     justify-content: start;
     border-bottom: #c6c6c6 thin solid;
     margin-top:5px;
@@ -15,7 +13,6 @@
 }
 
 .flagpole-control-edit-container {
-    display:flex;
     justify-content: start;
     margin-bottom: 16px;
 }
@@ -26,7 +23,12 @@
 }
 
 .flagpole-value {
-   flex: 1 1 auto;
+    flex: 1 1 auto;
+    margin-right: 10px;
+}
+
+.flagpole-value-desc {
+    flex: 1 1 auto;
 }
 
 .flagpole-edit {
@@ -36,4 +38,12 @@
 .update-button {
     width :100px;
     margin-bottom: 5px;
+}
+
+.flagpole-mod-date {
+    margin-bottom:7px;
+}
+.flagpole-message {
+    margin: 3px 0 7px 0;
+    color:red;
 }

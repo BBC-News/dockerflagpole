@@ -1,12 +1,12 @@
 /*
-This will create the initial page
+This will return all flagpoles
  */
 const express = require('express');
-const baseRouter = express.Router();
+const getRouter = express.Router();
 
-baseRouter.get('/get',  function(request, response) {
+getRouter.get('/get',  function(request, response) {
   let flagpoleStore = require('../src/dataStore');
   response.send(JSON.stringify(flagpoleStore.getAll()));
 });
 
-module.exports = baseRouter;
+module.exports = getRouter;

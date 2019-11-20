@@ -2,16 +2,13 @@
  Object to store a repository of flagpoles
  */
 "use strict";
-let Flagpole = require('../src/flagpole');
 
 let FlagpoleStore = {
-  config:{},
-  dataStore:{},
-  dataList:[]
+  dataStore:{}
 };
 
 FlagpoleStore.getAll = function() {
-  return this.dataList
+  return this.dataStore
 };
 
 FlagpoleStore.getFlagpole = function(_flagpoleName) {
@@ -22,47 +19,39 @@ FlagpoleStore.flagpoleExists = function(_flagpoleName) {
   return this.dataStore[_flagpoleName] !== undefined;
 };
 
-FlagpoleStore.setFlagpole = function(_flagpoleName, _newValue) {
-  let flagpole = this.dataStore[_flagpoleName]||null;
-  if (flagpole){
-    flagpole.setFlagpole(_newValue);
-  }
-};
-
-FlagpoleStore.readFlagpoles = function(){
+FlagpoleStore.readFlagpoles = function() {
   const fs = require('fs');
   let flagpoleData = fs.readFileSync(this.dataSourceURL, 'utf8');
-  if (!flagpoleData){
-    throw new Error("Unable to read flagpole data from source '"+this.dataSourceURL+"'")
+  if (!flagpoleData) {
+    throw new Error("Unable to read flagpole data from source '" + this.dataSourceURL + "'")
   }
-  let flagpolesObj = JSON.parse(flagpoleData),
-    flagpoleNames = Object.keys(flagpolesObj);
-  for (let i = 0; i < flagpoleNames.length; i++) {
-    let name = flagpoleNames[i],
-      newFlagpole = new Flagpole(name, flagpolesObj[name], this.dataList.length);
-    newFlagpole.setValue(flagpolesObj[name] === true)
-    this.dataStore[name] = newFlagpole;
-    this.dataList.push(newFlagpole);
+  this.dataStore = JSON.parse(flagpoleData)
+}
+
+FlagpoleStore.setFlagpole = function(_flagpoleName, _newValue) {
+  let newValue = _newValue===true || _newValue==='true' || _newValue==='TRUE' ||
+    _newValue==='Y' || _newValue==='y' || _newValue===1 || false,
+    flagpole = this.dataStore[_flagpoleName]||null;
+  if (flagpole !== null){
+    flagpole.value = newValue;
+    const dateFormat = require('dateformat');
+    let now = new Date();
+    flagpole.modified = dateFormat(now, "ddd, dd mmm yyyy HH:MM:ss");
   }
 }
 
 FlagpoleStore.setupFlagpoles = function(_flagpoleDataURL) {
   this.dataStore = {};
-  this.dataList = [];
   this.dataSourceURL = _flagpoleDataURL;
   this.readFlagpoles()
 };
 
 FlagpoleStore.writeFlagpoles = function(_flagpolesFile) {
   const fs = require('fs');
-  let flagpoleData = {}, res = true, outputStr = '';
+  let res = true, outputStr = '';
 
   try {
-    for (let i = 0; i < this.dataList.length; i++) {
-      let flagpole = this.dataList[i];
-      flagpoleData[flagpole.name] = flagpole.value
-    }
-    outputStr = JSON.stringify(flagpoleData);
+    outputStr = JSON.stringify(this.dataStore);
     fs.writeFileSync(this.dataSourceURL, outputStr, 'utf8')
   } catch (e) {
     console.log("Caught Error on write :"+e.message);

@@ -35,10 +35,15 @@ describe('Basic flagpole tests using config.yaml....', function () {
 
       it("Shows each flagpole current value correctly", function () {
         for (let i=0; i<flagpoleKeys.length;i++){
-          let flagpoleNameText = flagpoleKeys[i].toUpperCase(),
-            flagpoleValueText = flagpoleData[flagpoleKeys[i]]?'TRUE':'FALSE';
+          let flagpole = flagpoleData[flagpoleKeys[i]],
+            flagpoleNameText = flagpole.name.toUpperCase(),
+            flagpoleValueText = flagpole.value?flagpole.trueName:flagpole.falseName,
+            flagpoleValueTextDesc = flagpole.value?flagpole.trueDesc:flagpole.falseDesc;
+
           cy.get('[data-flagpole="'+flagpoleNameText+'"]').then(function(flagpoleElem) {
-            cy.wrap(flagpoleElem).find('.flagpole-value').contains(flagpoleValueText)
+            cy.wrap(flagpoleElem).find('.flagpole-value').contains(flagpoleValueText);
+
+            cy.wrap(flagpoleElem).find('.flagpole-value-desc').contains(flagpoleValueTextDesc)
           })
         }
       })
