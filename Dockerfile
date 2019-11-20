@@ -13,6 +13,8 @@ ADD ./routes/* ./routes/
 ADD ./config.yaml ./
 ADD ./package.json ./
 
+EXPOSE 3000
+
 RUN npm install --production
 
-CMD [ "npm", "run", "start-test" ]
+CMD [ "npm", "run", "start" ]

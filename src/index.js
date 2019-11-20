@@ -3,7 +3,7 @@ const yaml = require('js-yaml');
 const fs = require('fs');
 
 try {
-  const env = process.argv.length >= 3 ? process.argv[2] : 'none';
+  const env = process.argv.length >= 3 ? process.argv[2] : 'live';
   const config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
   if (!config[env]) {
     throw new Error(`Config for environment "${env}" not available`)
