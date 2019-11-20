@@ -21,7 +21,6 @@ try {
     throw new Error(`Environment "${env}" incorrectly configured for AWS S3 - check source and s3_bucket`)
   }
   const baseFlagpolesRouter = require('../routes/baseFlagpolesRouter');
-  const getFlagpolesRouter = require('../routes/getFlagpolesRouter');
   const setFlagpolesRouter = require('../routes/setFlagpolesRouter');
 
   const bodyParser = require("body-parser");
@@ -31,7 +30,6 @@ try {
   app.use('/assets', express.static('public/assets'));
   app.use(bodyParser.json());
   app.use(baseFlagpolesRouter.baseRouter);
-  //app.use(getFlagpolesRouter);
   app.use(setFlagpolesRouter);
 
   baseFlagpolesRouter.setup(config, env)

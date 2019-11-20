@@ -33,7 +33,6 @@ baseRouter.get('/get',  function(request, response) {
 });
 
 baseRouter.get('/:source',  function(request, response) {
-  console.log("--------->>>>>>>>> Got:'"+request.params.source+"'");
   try {
     flagpoleStore.setupFlagpoles(request.params.source, usesS3DataSource, s3Bucket).then(function () {
       response.sendFile(__dirname + '/index.html');
