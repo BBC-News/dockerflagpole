@@ -147,8 +147,8 @@ Below the flagpole display, the following UI controls will be displayed
 * Update button - A button to write the current flagpole state to file if the state of the flagpole has changed.
 
 Clicking the update button will set the value of the flagpole to the current state of the radio buttons and cause
-all flagpoles to be written out to the source file. Once the write has completed successfully, all flagpoles will
-be re-displayed on the screen to display the new value.
+all flagpoles to be written out to the source file. Once the write has completed successfully, only the updated
+flagpoles will be re-displayed with its new value, leaving all other flagpoles unchanged.
 
 The modified date of the edited flagpole will be set to the date and time of the moment when the flagpole was
 updated.
