@@ -104,29 +104,20 @@ Cypress or Jasmine tests should be adjusted to fir the new values.
 #### Test startup
 In test, the app is run as a stand-alone docker image running on the tester's laptop, the 
 tester must launch docker image with the following command ```npm run docker-launch-test```.
-**N.B.** The tester must have built the image to run first (see building section)
+This command will remove the image (if it exists), build a new one and then launch the container. At the moment
+The docker container cannot access S3 so the test Flagpoles data in S3 as the user it runs as has no permission.
 
-The above command will launch the docker container which will, by default, connect the app running against
-localhost:3000 on the local docker image to localhost:3000 on the tester's browser. The port that is used and the 
-command to start the app on that port is part of the setup of the docker image.
-
-The app will be configured to read from and write to an agreed S3 bucket hosted file that will be accessible 
-to all test applications requiring flagpole data.
-
-**N.B.** There is a current limitation in that the docker image does not yet have permission to read from
-and write to S3 files.
+The command ```npm run start-test``` can be used to launch the app locally (i.e. no container) running against
+localhost:3001 so that it can be run using test flagpole data on S3.
 
 #### Production startup
-When in production the app will run as its own EC2 container as part of the standard ECS that Global News runs. This
-means that there is no startup command that has to be issued by the user.
+When in production the app will run as its own EC2 container as part of the standard ECS that Global News runs.
+When the app is operated in a container with no overriding commmand (as is used in test docker) it will assume
+that tit is live and will read the live config.
 
 The image instance that is run will be accessible via a public web address that will route all web traffic to 
-the appropriate port on the image (part of config????) and therefore to the production app.
-The port that is used and the command to start the app on that port in the container is part of the setup of 
-the docker image.
-
-The app will be configured to read from and write to an agreed S3 bucket hosted file that will be accessible 
-to all live applications requiring flagpole data.
+the appropriate port on the image (fixed at 3000). The app is configured to read from and write to an S3 bucket 
+ file that will be accessible to all live applications requiring flagpole data.
  
 ### Functionality
 When opened the app will display a list of flagpoles read from the configured source for that environment.
@@ -176,7 +167,7 @@ Each test will read in the contents of the development data source and check tha
 displayed in the app. 
 
 #### Test enviroment testing
-TThe following command will start up the test Cypress environment ```npm run cypress-test```.
+The following command will start up the test Cypress environment ```npm run cypress-test```.
  This will allow execution of tests in the test environment using the test configuration parameters
  such as S3 source (flagpoles JSON file), S3 bucket and test domain (localhost connected to a docker image).
  
