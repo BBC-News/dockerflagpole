@@ -24,25 +24,20 @@ try {
   const getFlagpolesRouter = require('../routes/getFlagpolesRouter');
   const setFlagpolesRouter = require('../routes/setFlagpolesRouter');
 
-  baseFlagpolesRouter.setConfig();
-
   const bodyParser = require("body-parser");
   const app = express();
-
   app.use('/static', express.static('public/static'));
   app.use('/src', express.static('public/src'));
   app.use('/assets', express.static('public/assets'));
   app.use(bodyParser.json());
   app.use(baseFlagpolesRouter.baseRouter);
-  app.use(getFlagpolesRouter);
+  //app.use(getFlagpolesRouter);
   app.use(setFlagpolesRouter);
 
-  const flagpoleStore = require('../src/dataStore');
-  flagpoleStore.setupFlagpoles(flagpoleDataURL, usesS3DataSource, s3Bucket).then(function () {
-    app.listen(port, function () {
-      console.log(`Docker flagpoles app listening on port ${port} in ${env}`)
-    })
-  });
+  baseFlagpolesRouter.setup(config, env)
+  app.listen(port, function () {
+    console.log(`Docker flagpoles app listening on port ${port} in ${env}`)
+  })
 } catch (e) {
   console.log(e);
 }
