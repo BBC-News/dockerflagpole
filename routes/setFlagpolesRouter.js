@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();clearImmediate();
 
-router.put('/update',  function(request, response) {
+router.put('/update', function(request, response) {
   let flagpoleStore = require('../src/dataStore'),
     routerUtils = require('../routes/routerUtils');
   let flagpoleName = request.body.name,
@@ -13,21 +13,21 @@ router.put('/update',  function(request, response) {
     output = '';
 
   if (flagpoleExists) {
-    flagpoleStore.setFlagpole(flagpoleName, newValue);
-    output = routerUtils.showAll(flagpoleStore.getAll());
-
-    if (!flagpoleStore.writeFlagpoles()){
-      requestStatus = 500;
-      output = "Error writing out flagpole data"
-    }
+    flagpoleStore.setFlagpole(flagpoleName, newValue).then (function(){
+      output = routerUtils.showAll(flagpoleStore.getAll());
+      response.status(requestStatus).send(output);
+    }).catch(function(_err) {
+      output = output = routerUtils.showAll(flagpoleStore.getAll());
+      response.status(500).send(output);
+    })
   } else {
     if (hasName && hasValue) {
       output = 'Requested flagpole "' + flagpoleName + '" does not exist'
     } else {
       output = 'Badly formed update expression';
     }
+    response.status(requestStatus).send(output);
   }
-  response.status(requestStatus).send(output);
 });
 
 module.exports = router;

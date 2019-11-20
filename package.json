@@ -6,7 +6,7 @@
   "scripts": {
     "start-dev": "node ./src/index.js dev",
     "start-test": "node ./src/index.js test",
-    "start-prod": "node ./src/index.js",
+    "start-prod": "node ./src/index.js live",
     "docker-build-test": "./build.sh build",
     "docker-launch-test": "./build.sh launch",
     "cypress-open": "./node_modules/.bin/cypress open",
@@ -17,11 +17,13 @@
   "author": "Ben Davies",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.568.0",
     "body-parser": "^1.19.0",
     "dateformat": "^3.0.3",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
-    "js-yaml": "^3.13.1"
+    "js-yaml": "^3.13.1",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "cypress": "^3.5.0",
