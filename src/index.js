@@ -23,6 +23,9 @@ try {
   const baseFlagpolesRouter = require('../routes/baseFlagpolesRouter');
   const getFlagpolesRouter = require('../routes/getFlagpolesRouter');
   const setFlagpolesRouter = require('../routes/setFlagpolesRouter');
+
+  baseFlagpolesRouter.setConfig();
+
   const bodyParser = require("body-parser");
   const app = express();
 
@@ -30,7 +33,7 @@ try {
   app.use('/src', express.static('public/src'));
   app.use('/assets', express.static('public/assets'));
   app.use(bodyParser.json());
-  app.use(baseFlagpolesRouter);
+  app.use(baseFlagpolesRouter.baseRouter);
   app.use(getFlagpolesRouter);
   app.use(setFlagpolesRouter);
 
