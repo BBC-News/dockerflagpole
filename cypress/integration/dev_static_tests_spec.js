@@ -6,8 +6,12 @@ describe('Basic flagpole tests using config.yaml....', function () {
   it('Set up data ', function () {
     cy.readFile('config.yaml').then((str) => {
       const config = YAML.parse(str);
+      let sources = config[env].sources,
+        defaultSource = config[env].defaultSource,
+        source = sources[defaultSource];
+      cy.log(`env is ${env} and default source is ${defaultSource}`)
       baseURL = config[env].domain;
-      cy.readFile(config[env]['source']).then(function (data) {
+      cy.readFile(source).then(function (data) {
         flagpoleData = data;
         flagpoleKeys = Object.keys(flagpoleData);
         cy.visit(baseURL).then(function () {

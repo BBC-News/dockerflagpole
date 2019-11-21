@@ -70,16 +70,16 @@ FlagpoleStore.setFlagpole = function(_flagpoleName, _newValue) {
 
 FlagpoleStore.setupFlagpoles = function(_flagpoleDataURL, _usesS3DataSource, _s3Bucket) {
   this.dataSourceURL = _flagpoleDataURL;
-  this.usesS3Data = _usesS3DataSource===true;
+  this.usesS3Data = _usesS3DataSource === true;
   this.s3Bucket = _s3Bucket || '';
 
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     if (this.usesS3Data) {
       this.readS3Flagpoles().then(function (_flagpoleData) {
         this.dataStore = JSON.parse(_flagpoleData);
         resolve()
       }.bind(this), function (_err) {
-        throw new Error(`Reading from s3 failed (${_err})`)
+        reject(`Reading from s3 failed (${_err})`)
       }.bind(this))
     } else {
       this.dataStore = JSON.parse(this.readFlagpoles());
