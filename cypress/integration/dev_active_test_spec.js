@@ -6,8 +6,11 @@ describe('Development active flagpole tests using config.yaml....', function () 
   it('Set up development data ', function () {
     cy.readFile('config.yaml').then((str) => {
       const config = YAML.parse(str);
+      let sources = config[env].sources,
+        defaultSource = config[env].defaultSource,
+        source = sources[defaultSource]
       baseURL = config[env].domain;
-      cy.readFile(config[env]['source']).then(function (data) {
+      cy.readFile(source).then(function (data) {
         flagpoleData = data;
         flagpoleKeys = Object.keys(flagpoleData);
         cy.visit(baseURL).then(function () {
@@ -83,8 +86,11 @@ describe('Development active flagpole tests using config.yaml....', function () 
     it('Reread test data after update in last test ', function () {
       cy.readFile('config.yaml').then((str) => {
         const config = YAML.parse(str);
+        let sources = config[env].sources,
+          defaultSource = config[env].defaultSource,
+          source = sources[defaultSource]
         baseURL = config[env].domain;
-        cy.readFile(config[env]['source']).then(function (data) {
+        cy.readFile(source).then(function (data) {
           flagpoleData = data;
           flagpoleKeys = Object.keys(flagpoleData);
         })

@@ -39,10 +39,11 @@ Each target environment can have their own distinct set of properties.
 
 Here are the configuration values that can be set for each environment:-
 * port - This is the port thaat the application will operate on.
-* source - The is the file that flagpole data will be read from and written to in an environment.
 * domain - This is not actively used at the moment but may prove useful later.
-* uses_s3 - This is a boolean to indicate if the environment will use S3 for its flagpole source.
-* s3_bucket - This is the name of the S3 bucket to use (only required if uses_s3 is true) 
+* usesS3 - This is a boolean to indicate if the environment will use S3 for its flagpole source.
+* s3Bucket - This is the name of the S3 bucket to use (only required if uses_s3 is true)
+* defaultSource - The is the name of the flagpole source that will be used if no other source is specified
+* sources - An object keyed by names of flagpole data sources.  
 
 Please refer to the operation section for more information on how each configuration value is used in each 
 different environment.
@@ -128,9 +129,18 @@ the docker image.
 The app will be configured to read from and write to an agreed S3 bucket hosted file that will be accessible 
 to all live applications requiring flagpole data.
  
-### Functionality
-When opened the app will display a list of flagpoles read from the configured source for that environment.
-All flagpoles found in the source configured for that environment are displayed to the user.
+### Operation
+This section details how the docker flagpole application can be operated.
+
+#### Flagpole data source
+When opened the app will display a list of flagpoles read from the default source for that environment. The environment 
+needs to be configured so that the defaultSource configuration key is in fact one of the defined sources.
+
+If a user wishes to look at flagpoles from a different source there are two options: -
+* Start the app giving the name of the flagpole data source (i.e. localhost:3000/wwhp)
+* Start the app giving the name of a flagpole file (.json postfix optional) (i.e. localhost:3000/test_flagpoles_file) 
+ 
+All flagpoles found in the source are displayed to the user.
 
 #### Flagpole display
 Each flagpole display will have the following UI details :-
