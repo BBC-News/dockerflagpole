@@ -23,6 +23,6 @@ dev:
   defaultSource : test
   sources :
     test : test_flagpoles_file.json
-    wwhp : wwhp_flagpole_with_description.json
-    dotcom : dotCom_flagpole_with_description.json
+    wwhp : test_flagpoles_file.json
+    dotcom : test_flagpoles_file.json
 
