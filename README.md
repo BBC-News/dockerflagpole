@@ -5,7 +5,7 @@ A containerised application to manage flagpoles in a JSON file that is accessibl
 ## Environment
 The system requires that the following versions of applications to be installed:
 
-node v10.16.0 (npm v6.9.0)
+node v10.16.x (npm v6.9.0)
 
 ### Installation
 To install the system clone the repository ```git@github.com:bbc/bbc-gn-dockerflagpole.git``` and
@@ -103,42 +103,35 @@ standard file that only serves for testing. If the developer wishes to add new o
 Cypress or Jasmine tests should be adjusted to fir the new values.
 
 #### Test startup
-In test, the app is run as a stand-alone docker image running on the tester's laptop, the 
+In test, the app is envisioned to run as a stand-alone docker image running on the tester's laptop, the 
 tester must launch docker image with the following command ```npm run docker-launch-test```.
-**N.B.** The tester must have built the image to run first (see building section)
+This command will remove the image (if it exists), build a new one and then launch the container. 
 
-The above command will launch the docker container which will, by default, connect the app running against
-localhost:3000 on the local docker image to localhost:3000 on the tester's browser. The port that is used and the 
-command to start the app on that port is part of the setup of the docker image.
+At the moment the docker container cannot access S3 so the test Flagpoles data in S3 as the user it 
+runs as has no permission.
 
-The app will be configured to read from and write to an agreed S3 bucket hosted file that will be accessible 
-to all test applications requiring flagpole data.
-
-**N.B.** There is a current limitation in that the docker image does not yet have permission to read from
-and write to S3 files.
+The command ```npm run start-test``` can be used to launch the app locally (i.e. no container) running against
+localhost:3001 so that tests can be run using test flagpole data on S3.
 
 #### Production startup
-When in production the app will run as its own EC2 container as part of the standard ECS that Global News runs. This
-means that there is no startup command that has to be issued by the user.
+When in production the app will run as its own EC2 container as part of the standard ECS that Global News runs.
+When the app is operated in a container with no overriding commmand (as is used in test docker) it will assume
+that tit is live and will read the live config.
 
 The image instance that is run will be accessible via a public web address that will route all web traffic to 
-the appropriate port on the image (part of config????) and therefore to the production app.
-The port that is used and the command to start the app on that port in the container is part of the setup of 
-the docker image.
-
-The app will be configured to read from and write to an agreed S3 bucket hosted file that will be accessible 
-to all live applications requiring flagpole data.
+the appropriate port on the image (fixed at 3000). The app is configured to read from and write to an S3 bucket 
+ file that will be accessible to all live applications requiring flagpole data.
  
-### Operation
-This section details how the docker flagpole application can be operated.
+### Functionality
+This section details the functional operation of the docker flagpole application.
 
 #### Flagpole data source
 When opened the app will display a list of flagpoles read from the default source for that environment. The environment 
-needs to be configured so that the defaultSource configuration key is in fact one of the defined sources.
+needs to be configured so that the defaultSource configuration key exists in the configured defined sources.
 
 If a user wishes to look at flagpoles from a different source there are two options: -
 * Start the app giving the name of the flagpole data source (i.e. localhost:3000/wwhp)
-* Start the app giving the name of a flagpole file (.json postfix optional) (i.e. localhost:3000/test_flagpoles_file) 
+* Start the app giving the name of a flagpole file (.json suffix optional) (i.e. localhost:3000/test_flagpoles_file) 
  
 All flagpoles found in the source are displayed to the user.
 
@@ -164,7 +157,7 @@ The modified date of the edited flagpole will be set to the date and time of the
 updated.
 
 ### Testing
-End-to-end testing is now done using Cypress test framework where the tests read in the configuration of the
+End-to-end testing is performed using the Cypress test framework where the tests read in the configuration of the
 environment they're asked to run under to determine the urls and test   
 
 The Cypress tests are javascript spec files held in the directory ```cypress/integration```  and  have two main
@@ -185,12 +178,13 @@ The following tests can be run in the development environment ```dev_static_test
 Each test will read in the contents of the development data source and check that the data in the file is correctly 
 displayed in the app. 
 
-#### Test enviroment testing
-TThe following command will start up the test Cypress environment ```npm run cypress-test```.
+#### Test environment testing
+The following command will start up the test Cypress environment ```npm run cypress-test```.
  This will allow execution of tests in the test environment using the test configuration parameters
- such as S3 source (flagpoles JSON file), S3 bucket and test domain (localhost connected to a docker image).
+ such as S3 source (flagpoles JSON file), S3 bucket and test domain. The app is designed to be testedthrough
+ localhost connected to a docker image where the actual app will be running.
  
-Prior to running this command the tester will need to have built and launched the test docker container 
+Prior to running the above command the tester will need to have built and launched the test docker container 
 (see Test Startup section - Please note the current limitations)
 
 The following test can be run in the test environment ```static_tests_spec.js```.
