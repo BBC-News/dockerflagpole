@@ -72,7 +72,7 @@ window.addEventListener("DOMContentLoaded", function(event) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({name: this.flagpole.name, value: newValue ? 1 : 0})
           };
-        fetch(this.$parent.baseURL + 'update', params).then(async function (response) {
+        fetch(this.$parent.baseURL + '/update', params).then(async function (response) {
           if (response.ok) {
             this.flagpole.value = !this.flagpole.value;
             let newModDate = await response.text();
@@ -93,12 +93,13 @@ window.addEventListener("DOMContentLoaded", function(event) {
       flagpoles:[]
     },
     mounted: function(){
-      this.baseURL = window.document.URL;
+      let parseURLRes = /(http|https)(:\/\/\S*)\//.exec(window.document.baseURI);
+      this.baseURL = parseURLRes?parseURLRes[1]+parseURLRes[2]:'http://localhost:3000';
       this.loadFlagpoles()
     },
     methods: {
       loadFlagpoles: function() {
-        fetch(this.baseURL+'get').then(function(response){
+        fetch(this.baseURL+'/get').then(function(response){
           if(response.ok) {
             this.flagpoles = [];
             response.json().then(function(_data){

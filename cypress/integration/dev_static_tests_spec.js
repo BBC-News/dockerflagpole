@@ -1,13 +1,17 @@
 describe('Basic flagpole tests using config.yaml....', function () {
   const env = Cypress.env('ENVIRONMENT'),
     YAML = require('yamljs');
-  let baseURL = '', flagpoleData, flagpoleKeys;
+  let baseURL = '', flagpoleData, flagpoleKeys, flagpoleSources;
 
   it('Set up data ', function () {
     cy.readFile('config.yaml').then((str) => {
       const config = YAML.parse(str);
+      flagpoleSources = config[env].sources;
+        let defaultSource = config[env].defaultSource,
+        source = flagpoleSources[defaultSource];
+      cy.log(`env is ${env} and default source is ${defaultSource} --> ${source}`)
       baseURL = config[env].domain;
-      cy.readFile(config[env]['source']).then(function (data) {
+      cy.readFile(source).then(function (data) {
         flagpoleData = data;
         flagpoleKeys = Object.keys(flagpoleData);
         cy.visit(baseURL).then(function () {
@@ -15,6 +19,23 @@ describe('Basic flagpole tests using config.yaml....', function () {
         })
       })
     })
+  })
+
+  it('Test data sources ', function () {
+    let flagpoleSourceKeys = Object.keys(flagpoleSources);
+    for (let i=0; i<flagpoleSourceKeys.length;i++) {
+      let fullSource = flagpoleSources[flagpoleSourceKeys[i]],
+        sourceRoot = /(.*).json$/.exec(fullSource)[1]
+      cy.visit(baseURL+'/'+flagpoleSourceKeys[i]).then(function(){
+        cy.get('.flagpole-container').should('length.not.to.be',0)
+      })
+      cy.visit(baseURL+'/'+fullSource).then(function(){
+        cy.get('.flagpole-container').should('length.not.to.be',0)
+      })
+      cy.visit(baseURL+'/'+sourceRoot).then(function(){
+        cy.get('.flagpole-container').should('length.not.to.be',0)
+      })
+    }
   })
 
   describe("ensure that the contents of the flagpole file are displayed", function() {
