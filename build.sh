@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
+
 DOCKER_IMAGE_NAME="dockerflagpole"
 DOCKER_IMAGE_VERSION="1.0"
 IMAGE=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
