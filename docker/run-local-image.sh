@@ -23,7 +23,4 @@ eval $(aws ecr get-login --no-include-email --region eu-west-2)
 
 docker run -p3000:3000 \
     -e NODE_ENV="production" \
-    -e PLATFORM="${PLATFORM}" \
-    -e HABITATDOMAIN="cachestack-${PLATFORM}-pubstack.bbcverticals.com" \
-    -e HABITAT_REQUEST_KEY="JnesnhUFYZLTTgffWS8efzkSLKorzJZN" \
     -ti "${DOCKER_REPOSITORY_DOMAIN}/${DOCKER_REPOSITORY}:${DOCKER_TAG}"

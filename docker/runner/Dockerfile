@@ -1,3 +1,6 @@
+#
+# Docker file for live/production builds
+#
 FROM node:10.16.3-jessie
 
 WORKDIR /usr/src/app

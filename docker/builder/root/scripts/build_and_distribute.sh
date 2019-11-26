@@ -16,6 +16,5 @@ DIR="$( cd -- "$( dirname -- "$0" )" && pwd -P)"
 set -e
 
 $DIR/build_revision.sh "${REVISION}"
-$DIR/run_unit_tests.sh
-#$DIR/run_integration_tests.sh
+$DIR/run_integration_tests.sh
 $DIR/distribute_runner.sh -p

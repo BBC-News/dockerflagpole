@@ -15,7 +15,3 @@ DIR="$( cd -- "$( dirname -- "$0" )" && pwd -P)"
 
 cd /root/bbc-gnl-features-pwa
 $DIR/checkout_revision.sh "${REVISION}"
-$DIR/install_project_dependencies.sh
-
-mkdir -p /root/bbc-gnl-features-pwa/public
-yarn build
