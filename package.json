@@ -9,6 +9,7 @@
     "start": "node ./src/index.js live",
     "docker-launch-test": "./build.sh start",
     "cypress-open": "./node_modules/.bin/cypress open",
+    "cypress-dev-run": "CYPRESS_ENVIRONMENT=dev ./node_modules/.bin/cypress run --spec cypress/integration/dev_*.js",
     "cypress-dev": "CYPRESS_ENVIRONMENT=dev npm run cypress-open",
     "cypress-test": "CYPRESS_ENVIRONMENT=test npm run cypress-open",
     "cypress-live-test": "CYPRESS_ENVIRONMENT=live npm run cypress-open"

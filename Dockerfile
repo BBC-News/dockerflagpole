@@ -1,3 +1,6 @@
+#
+# Docker file for test builds (see README, package.json & build.sh)
+#
 FROM node:10.16.3-jessie
 
 WORKDIR /usr/src/app
